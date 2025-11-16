@@ -1,0 +1,55 @@
+## .NET
+bin/
+obj/
+out/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.nupkg
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Visual Studio
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.sln.docstates
+
+## Rider
+.idea/
+*.sln.iml
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+## Certificates
+*.pfx
+*.p12
+*.der
+*.crt
+*.key
+pki/
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Application specific
+appsettings.Development.json
+appsettings.Local.json
+logs/
