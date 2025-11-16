@@ -4,18 +4,12 @@ Worker Service .NET 8 moderno para comunicação OPC UA com arquitetura extensí
 
 ## 🚀 Características
 
-- ✅ **Padrão State**: Gerenciamento robusto de estados de conexão (Disconnected, Connecting, Connected, Error)
 - ✅ **Configuração via IOptions**: Todas as configurações em `appsettings.json`
 - ✅ **Suporte a Certificados**: Conexões seguras e não-seguras
 - ✅ **Extensível**: Arquitetura preparada para adicionar lógicas customizadas
 - ✅ **Reconexão Automática**: Retry automático em caso de falhas
 - ✅ **Dependency Injection**: DI configurado para fácil extensão
 - ✅ **Logging Estruturado**: Logs detalhados para debugging
-
-## 📋 Pré-requisitos
-
-- .NET 8.0 SDK ou superior
-- Servidor OPC UA para conectar (ou use um servidor de testes)
 
 ## 🔧 Configuração
 
@@ -45,17 +39,23 @@ Adicione as variáveis que deseja ler/escrever:
     "Variables": {
       "Read": [
         {
-          "Name": "Temperature",
-          "NodeId": "ns=2;s=Temperature",
+          "Name": "CycleStart",
+          "NodeId": "ns=3;i=2000",
           "DataType": "Double"
+        },
+        {
+          "Name": "CycleStop",
+          "NodeId": "ns=3;i=2001",
+          "DataType": "Double",
+          "DefaultValue": 25.0
         }
       ],
       "Write": [
         {
-          "Name": "SetPoint",
-          "NodeId": "ns=2;s=SetPoint",
-          "DataType": "Double",
-          "DefaultValue": 25.0
+          "Name": "ToWrite",
+          "NodeId": "ns=3;i=2002",
+          "DataType": "Boolean",
+          "DefaultValue": "true"
         }
       ]
     }
@@ -76,49 +76,16 @@ OpcUaWorkerService/
 ├── Configuration/          # Configuração fortemente tipada
 │   ├── OpcUaConnectionOptions.cs
 │   └── OpcUaVariablesOptions.cs
-├── States/                # Padrão State
-│   ├── IOpcUaConnectionState.cs
-│   ├── OpcUaStateContext.cs
-│   ├── DisconnectedState.cs
-│   ├── ConnectingState.cs
-│   ├── ConnectedState.cs
-│   └── ErrorState.cs
 ├── Services/              # Serviço OPC UA
 │   ├── IOpcUaService.cs
-│   └── OpcUaService.cs
+│   ├── OpcUaService.cs
+│   └── OpcUaContext.cs
 ├── Interfaces/            # Interfaces para extensão
 │   └── IOpcUaDataHandler.cs
 ├── Handlers/              # Handlers customizados
 │   └── DefaultOpcUaDataHandler.cs
 ├── Worker.cs             # Worker principal
 └── Program.cs            # Configuração DI
-```
-
-## 🎨 Padrão State
-
-O serviço implementa o padrão State para gerenciar conexões:
-
-```
-┌─────────────┐
-│ Disconnected│
-└──────┬──────┘
-       │ Connect()
-       ▼
-┌─────────────┐
-│ Connecting  │────Error────┐
-└──────┬──────┘             │
-       │ Success            │
-       ▼                    ▼
-┌─────────────┐      ┌──────────┐
-│  Connected  │──────▶│  Error   │
-└─────────────┘      └──────────┘
-                           │
-                           │ Retry
-                           └────────────┐
-                                        ▼
-                                  ┌─────────────┐
-                                  │ Disconnected│
-                                  └─────────────┘
 ```
 
 ## 🔌 Adicionar Lógica Customizada
